@@ -85,13 +85,26 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
+  var aria_label = document.getElementById('address_label');
+  aria_label.innerHTML = "Address: " + restaurant.address;
 
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img'
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  var imgurlbase = DBHelper.imageUrlForRestaurant(restaurant);
+  var length_image = imgurlbase.length;
+  imgurlbase = imgurlbase.substring(0, length_image-4);
+  const imgurl1x = imgurlbase + "_320.jpg";
+  const imgurl2x = imgurlbase + "_503.jpg";
+  const imgurl3x = imgurlbase + "_900.jpg";
+  image.src = imgurl1x;
+  image.srcset = `${imgurl1x} 320w, ${imgurl2x} 503w, ${imgurl3x} 900w`;
+  image.sizes = `(max-width: 320px) 320px, (max-width: 503px) 503px, 900px`;
+  image.alt = restaurant.name + " restaurant marketing photograph";
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
+  var aria_label = document.getElementById('cuisine_label');
+  aria_label.innerHTML = "Cuisine: " + restaurant.cuisine_type;
 
   // fill operating hours
   if (restaurant.operating_hours) {
@@ -109,6 +122,17 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
   for (let key in operatingHours) {
     const row = document.createElement('tr');
 
+    // Create Attitube for Tab Index on Row Only
+    var label_tabindex = document.createAttribute("tabindex");       
+    label_tabindex.value = 0;
+    // Set the attirubte to the row
+    row.setAttributeNode(label_tabindex);
+
+    // Aria Labelled By
+    var label_attribute = document.createAttribute("aria-labelledby");    
+    label_attribute.value = key + "_label";                          
+    row.setAttributeNode(label_attribute);    
+
     const day = document.createElement('td');
     day.innerHTML = key;
     row.appendChild(day);
@@ -118,6 +142,12 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
     row.appendChild(time);
 
     hours.appendChild(row);
+
+   // Aria Label for Row That Speaks Day + Hours
+   var aria_label = document.createElement('label');
+   aria_label.id = key + "_label";
+   aria_label.className = "aria-label";
+   aria_label.innerHTML = key + operatingHours[key];    
   }
 }
 
@@ -147,6 +177,9 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
  * Create review HTML and add it to the webpage.
  */
 createReviewHTML = (review) => {
+  var randomNumberBetween0and19999 = Math.floor(Math.random() * 20000);
+  var review_id = randomNumberBetween0and19999;
+
   const li = document.createElement('li');
   const name = document.createElement('p');
   name.innerHTML = review.name;
@@ -164,6 +197,25 @@ createReviewHTML = (review) => {
   comments.innerHTML = review.comments;
   li.appendChild(comments);
 
+  // Add Tab Index for the List Element
+  var label_tabindex = document.createAttribute("tabindex");       
+  label_tabindex.value = 0;
+  // Set the attirubte to the row
+  li.setAttributeNode(label_tabindex);
+
+  // Add Aria LabelledBy Attribute for Review
+  var label_attribute = document.createAttribute("aria-labelledby");    
+  label_attribute.value = review_id + "_label";                         
+  li.setAttributeNode(label_attribute); 
+
+  // Add Aria Label for Single Review
+  var aria_label = document.createElement('label');
+  aria_label.id = review_id + "_label";
+  aria_label.className = "aria-label";
+  aria_label.innerHTML = "Rating " + review.rating + " stars. Date " + review.date + ". Reviewed By " + review.name + ". Comments: " + review.comments;
+
+  li.appendChild(aria_label);
+
   return li;
 }
 
@@ -173,7 +225,11 @@ createReviewHTML = (review) => {
 fillBreadcrumb = (restaurant=self.restaurant) => {
   const breadcrumb = document.getElementById('breadcrumb');
   const li = document.createElement('li');
-  li.innerHTML = restaurant.name;
+  const a = document.createElement("a");
+  a.href = window.location; 
+  a.innerHTML = restaurant.name;
+  a.setAttribute("aria-current", "page");
+  li.appendChild(a);
   breadcrumb.appendChild(li);
 }
 

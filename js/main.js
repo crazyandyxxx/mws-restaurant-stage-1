@@ -160,7 +160,16 @@ createRestaurantHTML = (restaurant) => {
 
   const image = document.createElement('img');
   image.className = 'restaurant-img';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  var imgurlbase = DBHelper.imageUrlForRestaurant(restaurant);
+  var length_image = imgurlbase.length;
+  imgurlbase = imgurlbase.substring(0, length_image-4);
+  const imgurl1x = imgurlbase + "_320.jpg";
+  const imgurl2x = imgurlbase + "_503.jpg";
+  const imgurl3x = imgurlbase + "_900.jpg";
+  image.src = imgurl1x;
+  image.srcset = `${imgurl1x} 320w, ${imgurl2x} 503w, ${imgurl3x} 900w`;
+  image.sizes = `(max-width: 503px) 320px, (max-width: 900px) 503px, 900px`;
+  image.alt = restaurant.name + " restaurant marketing photograph";
   li.append(image);
 
   const name = document.createElement('h1');
@@ -168,17 +177,29 @@ createRestaurantHTML = (restaurant) => {
   li.append(name);
 
   const neighborhood = document.createElement('p');
+  neighborhood.className = 'restaurant-neighborhood';
   neighborhood.innerHTML = restaurant.neighborhood;
   li.append(neighborhood);
 
   const address = document.createElement('p');
+  address.className = 'restaurant-address';
   address.innerHTML = restaurant.address;
   li.append(address);
 
   const more = document.createElement('a');
+  var label_attribute = document.createAttribute("aria-labelledby");
+  var restaurant_name = restaurant.name;
+  restaurant_name = restaurant_name.replace(/\s+/g, '');       
+  label_attribute.value = restaurant_name + "_label";                          
+  more.setAttributeNode(label_attribute); 
   more.innerHTML = 'View Details';
   more.href = DBHelper.urlForRestaurant(restaurant);
-  li.append(more)
+  const aria_label = document.createElement('label');
+  aria_label.id = restaurant_name + "_label";
+  aria_label.className = "aria-label";
+  aria_label.innerHTML = "Link: Restaurant " + restaurant.name + " Details. Neighborhood: " + restaurant.neighborhood + " Address: " + restaurant.address;
+  li.append(more);
+  li.append(aria_label);
 
   return li
 }
