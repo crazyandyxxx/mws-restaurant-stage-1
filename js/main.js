@@ -172,7 +172,7 @@ createRestaurantHTML = (restaurant) => {
   image.alt = restaurant.name + " restaurant marketing photograph";
   li.append(image);
 
-  const name = document.createElement('h1');
+  const name = document.createElement('h3');
   name.innerHTML = restaurant.name;
   li.append(name);
 
@@ -197,7 +197,8 @@ createRestaurantHTML = (restaurant) => {
   const aria_label = document.createElement('label');
   aria_label.id = restaurant_name + "_label";
   aria_label.className = "aria-label";
-  aria_label.innerHTML = "Link: Restaurant " + restaurant.name + " Details. Neighborhood: " + restaurant.neighborhood + " Address: " + restaurant.address;
+  // aria_label.innerHTML = "Link: Restaurant " + restaurant.name + " Details. Neighborhood: " + restaurant.neighborhood + " Address: " + restaurant.address;
+  aria_label.innerHTML = `Link: Restaurant ${restaurant.name} Details. Neighborhood: ${restaurant.neighborhood} Address: ${restaurant.address}`;
   li.append(more);
   li.append(aria_label);
 
