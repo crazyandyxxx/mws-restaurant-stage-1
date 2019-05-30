@@ -11,15 +11,13 @@ self.addEventListener("install", function(event) {
     return cache.addAll([
       'index.html',
       'restaurant.html',
-      '/css/main.css',
-      '/css/responsive.css',
+      '/css/styles.css',
       '/js/dbhelper.js',
       '/js/main.js',
       '/js/restaurant_info.js',
       '/img/*',
       '/js/register.js',
-      '//normalize-css.googlecode.com/svn/trunk/normalize.css',
-      'https://fonts.googleapis.com/css?family=Roboto:300,400,500'
+      '//normalize-css.googlecode.com/svn/trunk/normalize.css'
     ])
     .catch(error => {
       
